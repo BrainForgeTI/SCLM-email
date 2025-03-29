@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { MailModule } from './Email/mail.module';
+import { MailModule } from './Email/email.module';
 
 @Module({
   imports: [
@@ -14,7 +13,7 @@ import { MailModule } from './Email/mail.module';
         uri: configService.get<string>('MONGODB_URI'),
       }),
     }),
-    MailModule
+    MailModule,
   ],
   providers: [],
 })
