@@ -1,16 +1,25 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { EmailDTO } from './dto/email.dto';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { SendEmailRequest } from './dto/request/send.email.request';
 import { SendEmailInputPort } from 'src/Email/core/ports/in/SendEmailInputPort';
+import { EmailMapper } from './dto/email.mapper';
 
 @Controller('email')
 export class mailController {
   constructor(
-    private readonly sendMailUsecase: SendEmailInputPort
+    @Inject('SendEmailInputPort')
+    private readonly sendMailUsecase: SendEmailInputPort,
+    private readonly emailMapper: EmailMapper,
   ) {}
 
   // receber o email via param, talvez criptar o email com o bcrypt com uma chave que só os dois microserviços sabem. Talvez externalizar essa chave também.
   @Post('/send')
-  public sendMail(@Body() email: EmailDTO) {
-    return this.sendMailUsecase.execute(email);
+  public sendMail(@Body() request: SendEmailRequest) {
+    const emailModelIn =
+      this.emailMapper.SendEmailRequestToEmailModelIn(request);
+      try {
+        return this.sendMailUsecase.execute(emailModelIn);
+      } catch (e) {
+        console.log(e)
+      }
   }
 }

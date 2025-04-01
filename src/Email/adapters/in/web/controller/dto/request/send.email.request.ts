@@ -1,4 +1,4 @@
-export class EmailDTO {
+export class SendEmailRequest {
   email: string;
   token: string;
 }

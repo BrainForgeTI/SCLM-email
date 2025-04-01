@@ -1,4 +1,6 @@
-class EmailModelIn {
-    email: string;
-    token: string;
+export class EmailModelIn {
+  constructor(
+    public email: string,
+    public token: string,
+  ) {}
 }

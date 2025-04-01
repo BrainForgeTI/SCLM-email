@@ -1,5 +1,5 @@
-import { EmailDTO } from "src/Email/adapters/in/web/controller/dto/email.dto";
+import { EmailModelIn } from '../../domain/models/EmailModelIn';
 
 export interface SendEmailInputPort {
-    execute(dto: EmailDTO): void
+  execute(emailModelIn: EmailModelIn): void;
 }
