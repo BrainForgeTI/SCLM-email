@@ -6,22 +6,22 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class SendMailUsecase implements SendEmailInputPort {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService) { }
 
   async execute(emailModelIn: EmailModelIn): Promise<void> {
-    const { email } = emailModelIn;
+    const { email, token } = emailModelIn;
     const transport = this.emailTransport();
-    const lista = this.tokenRandom();
 
     const options: nodemailer.SendMailOptions = {
       to: email,
       from: this.configService.get<string>('EMAIL_USERNAME'),
       subject: 'Scholarium - código de cadastro para a platarfoma',
-      text: `Seu código de acesso é: ${lista}.`,
-      html: `<p>Seu código de acesso é: ${lista}.</p> `,
+      text: `Seu código de acesso é: ${token}.`,
+      html: `<p>Seu código de acesso é: ${token}.</p> `,
     };
 
     await transport.sendMail(options);
+    console.log('Email sent successfully!');
   }
 
   private emailTransport() {
@@ -35,17 +35,5 @@ export class SendMailUsecase implements SendEmailInputPort {
       },
     });
     return transporter;
-  }
-
-  private getRandom(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
-  private tokenRandom() {
-    const list: Array<number> = [];
-    for (let i = 0; i < 4; i++) {
-      list.push(this.getRandom(1, 9));
-    }
-    return list;
   }
 }
