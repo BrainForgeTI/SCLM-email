@@ -14,7 +14,6 @@ export class RmqProcessController {
 
   @EventPattern('email_queue')
   async handleEmailQueue(@Payload() request: SendEmailRequest) {
-    console.log('Evento recebido na fila email_queue:', request);
     const emailModelIn =
       this.emailMapper.SendEmailRequestToEmailModelIn(request);
     return this.SendMailUsecase.execute(emailModelIn);
