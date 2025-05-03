@@ -1,12 +1,12 @@
-import { SendEmailInputPort } from '../ports/in/SendEmailInputPort';
+import { SendEmailInputPort } from '../ports/in/send.email.input.port';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
-import { EmailModelIn } from '../domain/models/EmailModelIn';
+import { EmailModelIn } from '../domain/models/email.model.in';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class SendMailUsecase implements SendEmailInputPort {
-  constructor(private readonly configService: ConfigService) { }
+  constructor(private readonly configService: ConfigService) {}
 
   async execute(emailModelIn: EmailModelIn): Promise<void> {
     const { email, token } = emailModelIn;
