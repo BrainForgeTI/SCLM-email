@@ -2,7 +2,7 @@ import { SendEmailInputPort } from '../ports/in/send.email.input.port';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { EmailModelIn } from '../domain/models/email.model.in';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
 @Injectable()
 export class SendMailUsecase implements SendEmailInputPort {
@@ -17,11 +17,17 @@ export class SendMailUsecase implements SendEmailInputPort {
       from: this.configService.get<string>('EMAIL_USERNAME'),
       subject: 'Scholarium - código de cadastro para a platarfoma',
       text: `Seu código de acesso é: ${token}.`,
-      html: `<p>Seu código de acesso é: ${token}.</p> `,
+      html: `<p>Seu código de acesso é: <span style="color: red"> ${token}</span>.</p> `,
     };
 
-    await transport.sendMail(options);
-    console.log('Email sent successfully!');
+    try {
+      await transport.sendMail(options);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Error sending email',
+        error.message,
+      );
+    }
   }
 
   private emailTransport() {
