@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { mailController } from './adapters/in/web/controller/email.controller';
 import { SendMailUsecase } from './core/usecases/send.email.usecase';
 import { EmailMapper } from './adapters/in/web/controller/dto/email.mapper';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -28,6 +27,6 @@ import { RmqProcessController } from './adapters/in/web/controller/rmq.process.c
       useClass: SendMailUsecase,
     },
   ],
-  controllers: [mailController, RmqProcessController],
+  controllers: [RmqProcessController],
 })
 export class MailModule {}
