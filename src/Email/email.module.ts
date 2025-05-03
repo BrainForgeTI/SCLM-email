@@ -3,8 +3,7 @@ import { mailController } from './adapters/in/web/controller/email.controller';
 import { SendMailUsecase } from './core/usecases/send.email.usecase';
 import { EmailMapper } from './adapters/in/web/controller/dto/email.mapper';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { RmqProcessController } from './rabbitmq/rmq.process.controller';
-import { RmqProcessService } from './rabbitmq/rmq.process.service';
+import { RmqProcessController } from './adapters/in/web/controller/rmq.process.controller';
 
 @Module({
   imports: [
@@ -24,7 +23,6 @@ import { RmqProcessService } from './rabbitmq/rmq.process.service';
   ],
   providers: [
     EmailMapper,
-    RmqProcessService,
     {
       provide: 'SendEmailInputPort',
       useClass: SendMailUsecase,
