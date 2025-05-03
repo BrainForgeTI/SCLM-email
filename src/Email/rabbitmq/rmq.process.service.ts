@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientRMQ, EventPattern, MessagePattern } from '@nestjs/microservices';
+import { ClientRMQ } from '@nestjs/microservices';
 import { SendEmailRequest } from 'src/Email/adapters/in/web/controller/dto/request/send.email.request';
-import { SendMailUsecase } from 'src/Email/core/usecases/SendMailUsecase';
+import { SendMailUsecase } from '../core/usecases/send.email.usecase';
 
 @Injectable()
 export class RmqProcessService {

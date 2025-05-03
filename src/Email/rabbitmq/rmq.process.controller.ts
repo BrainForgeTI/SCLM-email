@@ -1,7 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { RmqProcessService } from './rmq.process.service';
-import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
-import { SendEmailRequest } from 'src/Email/adapters/in/web/controller/dto/request/send.email.request';
+import { EventPattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class RmqProcessController {

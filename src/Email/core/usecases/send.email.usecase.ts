@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class SendMailUsecase implements SendEmailInputPort {
-  constructor(private readonly configService: ConfigService) { }
+  constructor(private readonly configService: ConfigService) {}
 
   async execute(emailModelIn: EmailModelIn): Promise<void> {
     const { email, token } = emailModelIn;
