@@ -12,7 +12,7 @@ export class RmqProcessController {
     private readonly emailMapper: EmailMapper,
   ) {}
 
-  @EventPattern('email_queue')
+  @EventPattern('validate_user_email_queue')
   async handleEmailQueue(@Payload() request: SendEmailRequest) {
     const emailModelIn =
       this.emailMapper.SendEmailRequestToEmailModelIn(request);
