@@ -2,11 +2,23 @@ import { SendEmailInputPort } from '../ports/in/send.email.input.port';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { EmailModelIn } from '../domain/models/email.model.in';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import {
+  LOG_LEVEL,
+  SendRmqMessageInputPort,
+} from '../ports/in/send.rmb.message.input.port';
 
 @Injectable()
 export class SendMailUsecase implements SendEmailInputPort {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    @Inject('SendRmqMessageInputPort')
+    private readonly rabbitService: SendRmqMessageInputPort,
+  ) {}
 
   async execute(emailModelIn: EmailModelIn): Promise<void> {
     const { email, token } = emailModelIn;
@@ -22,6 +34,15 @@ export class SendMailUsecase implements SendEmailInputPort {
 
     try {
       await transport.sendMail(options);
+      this.rabbitService.send({
+        level: LOG_LEVEL.LOG,
+        message: `Validation email sent successfully to "${email}" with token: ${token}.`,
+        date: new Date(),
+        module: 'Email Service',
+        operation: 'Validate Email',
+        user: 'Applicaation',
+      });
+      console.log('Enviou mensagem para a fila de log');
     } catch (error) {
       throw new InternalServerErrorException(
         'Error sending email',
