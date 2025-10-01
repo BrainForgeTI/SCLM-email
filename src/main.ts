@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import type { MicroserviceOptions } from '@nestjs/microservices';
+import { Transport } from '@nestjs/microservices';
 import { HttpExceptionFilter } from './Email/core/domain/exceptions/http.exception.filter';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   const queues = ['validate_user_email_queue'];
@@ -25,4 +26,6 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
 }
-bootstrap();
+bootstrap()
+  .then(() => console.log('App started'))
+  .catch((err) => console.error(err));

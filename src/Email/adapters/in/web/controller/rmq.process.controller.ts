@@ -13,7 +13,9 @@ export class RmqProcessController {
   ) {}
 
   @EventPattern('validate_user_email_queue')
-  async handleEmailQueue(@Payload() request: SendEmailRequest) {
+  async handleEmailQueue(
+    @Payload() request: SendEmailRequest,
+  ): Promise<unknown> {
     const emailModelIn =
       this.emailMapper.SendEmailRequestToEmailModelIn(request);
     return this.SendMailUsecase.execute(emailModelIn);
