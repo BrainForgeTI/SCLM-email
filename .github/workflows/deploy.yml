@@ -32,7 +32,7 @@ jobs:
       - name: Compress application for EB
         run: |
           mkdir -p bundle/.platform
-          cp -r Dockerfile docker-compose.yml dist package*.json bundle/
+          cp -r dist package*.json bundle/
           cp -r .platform/* bundle/.platform/ 2>/dev/null || true
           cd bundle
           zip -r ../deploy.zip .
@@ -49,22 +49,21 @@ jobs:
         run: |
           aws s3 cp deploy.zip s3://${{ secrets.S3_BUCKET }}/deploy-${{ github.sha }}.zip
 
-      - name: Create new application version
+      - name: Set version label
+        run: echo "VERSION_LABEL=v-${{ github.sha }}-${{ github.run_id }}" >> $GITHUB_ENV
+
+      - name: Create EB application version
         run: |
-          VERSION_LABEL="v-${{ github.sha }}-${{ github.run_id }}"
-          echo "Creating version: $VERSION_LABEL"
           aws elasticbeanstalk create-application-version \
-            --application-name ${{ secrets.EB_APP_NAME }} \
-            --version-label "$VERSION_LABEL" \
+            --application-name "${{ secrets.EB_APP_NAME }}" \
+            --version-label "${{ env.VERSION_LABEL }}" \
             --source-bundle S3Bucket="${{ secrets.S3_BUCKET }}",S3Key="deploy-${{ github.sha }}.zip"
 
       - name: Deploy new version to EB
         run: |
-          VERSION_LABEL="v-${{ github.sha }}-${{ github.run_id }}"
-          echo "Deploying version: $VERSION_LABEL"
           aws elasticbeanstalk update-environment \
-            --environment-name ${{ secrets.EB_ENV_NAME }} \
-            --version-label "$VERSION_LABEL"
+            --environment-name "${{ secrets.EB_ENV_NAME }}" \
+            --version-label "${{ env.VERSION_LABEL }}"
 
   recreate-develop-branch:
     name: Recreate Develop Branch from Main
