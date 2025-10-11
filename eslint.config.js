@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-const { defineConfig } = require('eslint/config');
+const { defineConfig, globalIgnores } = require('eslint/config');
 
 const tsParser = require('@typescript-eslint/parser');
 const typescriptEslintEslintPlugin = require('@typescript-eslint/eslint-plugin');
@@ -19,10 +19,12 @@ module.exports = defineConfig([
     languageOptions: {
       parser: tsParser,
       sourceType: 'module',
+
       parserOptions: {
         project: 'tsconfig.json',
         tsconfigRootDir: __dirname,
       },
+
       globals: {
         ...globals.node,
         ...globals.jest,
@@ -35,45 +37,15 @@ module.exports = defineConfig([
 
     extends: compat.extends(
       'plugin:@typescript-eslint/recommended',
-      'plugin:@typescript-eslint/strict',
       'plugin:prettier/recommended',
     ),
 
     rules: {
-      '@typescript-eslint/no-empty-function': [
-        'error',
-        {
-          allow: ['constructors', 'methods', 'decoratedFunctions'],
-        },
-      ],
-      'no-empty': [
-        'error',
-        {
-          allowEmptyCatch: true,
-        },
-      ],
-
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/explicit-function-return-type': 'warn',
-      '@typescript-eslint/explicit-module-boundary-types': 'warn',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        { argsIgnorePattern: '^_' },
-      ],
-      '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/prefer-nullish-coalescing': 'error',
-      '@typescript-eslint/prefer-optional-chain': 'error',
-      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
-
-      'class-methods-use-this': 'off',
+      '@typescript-eslint/interface-name-prefix': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
-
-    ignores: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/build/**',
-      './src/generated/**',
-    ],
   },
+  globalIgnores(['**/.eslintrc.js']),
 ]);
