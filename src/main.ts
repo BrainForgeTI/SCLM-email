@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import type { MicroserviceOptions } from '@nestjs/microservices';
+import { Transport } from '@nestjs/microservices';
 import { HttpExceptionFilter } from './Email/core/domain/exceptions/http.exception.filter';
-import { INestApplication } from '@nestjs/common';
+import type { INestApplication } from '@nestjs/common';
 
 async function setupMicroservices(app: INestApplication): Promise<void> {
   app.connectMicroservice<MicroserviceOptions>({

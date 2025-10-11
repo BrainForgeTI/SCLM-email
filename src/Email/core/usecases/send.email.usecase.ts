@@ -51,7 +51,7 @@ export class SendMailUsecase implements SendEmailInputPort {
     }
   }
 
-  private emailTransport() {
+  private emailTransport(): nodemailer.Transporter {
     const transporter = nodemailer.createTransport({
       host: this.configService.get<string>('EMAIL_HOST'),
       secure: false,
