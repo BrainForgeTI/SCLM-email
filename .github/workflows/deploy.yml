@@ -66,6 +66,8 @@ jobs:
     name: Recreate Develop Branch from Main
     runs-on: ubuntu-latest
     needs: deploy-to-eb
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout main
