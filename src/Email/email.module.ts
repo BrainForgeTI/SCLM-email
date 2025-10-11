@@ -1,39 +1,59 @@
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 import { Module } from '@nestjs/common';
 import { SendMailUsecase } from './core/usecases/send.email.usecase';
 import { EmailMapper } from './adapters/in/web/controller/dto/email.mapper';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import {
+  ClientProvider,
+  ClientsModule,
+  Transport,
+} from '@nestjs/microservices';
 import { RmqProcessController } from './adapters/in/web/controller/rmq.process.controller';
 import { SendRmqMessageUsecase } from './core/usecases/send.rmb.message.usecase';
+import { CustomConfigService } from 'src/Common/services/custom.config.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: 'VALIDATE_USER_EMAIL_QUEUE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://localhost:5672'],
-          queue: 'validate_user_email_queue',
-          queueOptions: {
-            durable: false,
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: async (
+          configService: CustomConfigService,
+        ): Promise<ClientProvider> => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get<string>('RABBITMQ_URL')],
+            queue: 'validate_user_email_queue',
+            queueOptions: {
+              durable: false,
+            },
           },
-        },
+        }),
       },
       {
         name: 'SAVE_LOG_QUEUE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://localhost:5672'],
-          queue: 'save_log_queue',
-          queueOptions: {
-            durable: false,
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: async (
+          configService: CustomConfigService,
+        ): Promise<ClientProvider> => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get<string>('RABBITMQ_URL')],
+            queue: 'save_log_queue',
+            queueOptions: {
+              durable: false,
+            },
           },
-        },
+        }),
       },
     ]),
   ],
   providers: [
     EmailMapper,
+    CustomConfigService,
     {
       provide: 'SendEmailInputPort',
       useClass: SendMailUsecase,

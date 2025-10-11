@@ -1,5 +1,4 @@
 import { SendEmailInputPort } from '../ports/in/send.email.input.port';
-import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { EmailModelIn } from '../domain/models/email.model.in';
 import {
@@ -11,11 +10,12 @@ import {
   LOG_LEVEL,
   SendRmqMessageInputPort,
 } from '../ports/in/send.rmb.message.input.port';
+import { CustomConfigService } from 'src/Common/services/custom.config.service';
 
 @Injectable()
 export class SendMailUsecase implements SendEmailInputPort {
   constructor(
-    private readonly configService: ConfigService,
+    private readonly configService: CustomConfigService,
     @Inject('SendRmqMessageInputPort')
     private readonly rabbitService: SendRmqMessageInputPort,
   ) {}
@@ -51,7 +51,7 @@ export class SendMailUsecase implements SendEmailInputPort {
     }
   }
 
-  private emailTransport() {
+  private emailTransport(): nodemailer.Transporter {
     const transporter = nodemailer.createTransport({
       host: this.configService.get<string>('EMAIL_HOST'),
       secure: false,
