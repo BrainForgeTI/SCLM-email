@@ -6,9 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   deploy-to-eb:
     name: Deploy Docker App to Elastic Beanstalk
